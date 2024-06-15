@@ -1,27 +1,32 @@
- 
+
 #!/bin/bash
 echo -e "Starting APB Reloaded standalone installer..."
 
+# Variables
+
+UMU_URL="https://github.com/telqor/apb-standalone/raw/main/umu-launcher.tar.gz"
+
+UMU_FILE="umu-launcher.tar.gz"
+
+UMU_PATH="$HOME/.local"
+
+GAME_PATH="$HOME/Games/APB Reloaded"
+
+# Game links. TODO, parse the XML to always get latest
+
+APB_URL="http://apb.patch.gamersfirst.com/Launcher1.30.0.839857/Launcher"
+
+# Anti stutter config "for good measure"
+
+export DXVK_CONFIG="d3d9.cachedDynamicBuffers = True"
 
 # Check for and install umu
 if ! command -v umu-run &> /dev/null
 then
-    echo "No umu-launcher installation detected.  Checking requirements..."
-
-    # Check for make and git
-    if ! command -v git &> /dev/null
-    then
-        echo "git was not detected, please install git using your distribution's package management"
-    fi
-
-    if ! command -v make &> /dev/null
-    then
-        echo "make was not detected, please install make using your distribution's package management"
-    fi
-
+    echo "umu-launcher not found in your system!"
     # Install UMU
     read -p "Would you like to install umu-launcher for the current user? (y/n) " inst
-    case $yn in
+    case $inst in
 	y ) echo "Proceeding with install..."
 		break;;
 	n ) echo "Cannot proceed without umu-launcher, exiting...";
@@ -30,17 +35,33 @@ then
         exit 1;;
     esac
 
-    # TODO do the big bad umu install from sourcce (on user prefix)
-
-    exit 1
+    mkdir -p $UMU_PATH
+    cd $UMU_PATH
+    wget $UMU_URL
+    tar xfvz $UMU_FILE
+    rm $UMU_FILE
+    if ! command -v umu-run &> /dev/null
+    then
+        echo "umu installation failed, please make sure that your umu installation path $UMU_PATH/bin is in your PATH variable"
+        exit 2
+    fi
 fi
 
 echo "Found umu install!"
 
-# TODO check if the game is installed in $HOME/Games/APB Reloaded. If so exit (if this folder exists)
+mkdir -p "$GAME_PATH/Launcher"
+cd "$GAME_PATH/Launcher"
 
-# TODO install the game by downloading the launcher and environment config file to "$HOME/Games/APB Reloaded/Launcher"
+# Download the launcher if needed
+if [ ! -f ./APBLauncher.exe ]; then
+  echo "Downloading launcher..."
+  wget "$APB_URL/APBLauncher.exe" -O APBLauncher.exe.zip
+  wget "$APB_URL/environment.config" -O environment.config.zip
+  unzip APBLauncher.exe.zip
+  unzip environment.config.zip
+  rm APBLauncher.exe.zip
+  rm environment.config.zip
+fi
 
-# TODO run the launcher
-
-# TODO create a shortcut to the launcher and to the game  (for config users)
+# Run the launcher which will install the game if not installed
+GAMEID=113400 PROTONPATH=GE-Proton umu-run APBLauncher.exe
