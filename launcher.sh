@@ -10,6 +10,8 @@ UMU_FILE="umu-launcher.tar.gz"
 
 UMU_PATH="$HOME/.local"
 
+UMU_CMD="umu-run"
+
 GAME_PATH="$HOME/Games/APB Reloaded"
 
 # Game links. TODO, parse the XML to always get latest
@@ -23,27 +25,26 @@ export DXVK_CONFIG="d3d9.cachedDynamicBuffers = True"
 # Check for and install umu
 if ! command -v umu-run &> /dev/null
 then
-    echo "umu-launcher not found in your system!"
-    # Install UMU
-    read -p "Would you like to install umu-launcher for the current user? (y/n) " inst
-    case $inst in
-	y ) echo "Proceeding with install..."
-		break;;
-	n ) echo "Cannot proceed without umu-launcher, exiting...";
-		exit 1;;
-	* ) echo "Invalid response, exiting...";
-        exit 1;;
-    esac
-
-    mkdir -p $UMU_PATH
-    cd $UMU_PATH
-    wget $UMU_URL
-    tar xfvz $UMU_FILE
-    rm $UMU_FILE
-    if ! command -v umu-run &> /dev/null
+    UMU_CMD=$UMU_PATH/bin/umu-run
+    if [ ! -f $UMU_CMD ];
     then
-        echo "umu installation failed, please make sure that your umu installation path $UMU_PATH/bin is in your PATH variable"
-        exit 2
+        echo "umu-launcher not found in your system!"
+        # Install UMU
+        read -p "Would you like to install umu-launcher for the current user? (y/n) " inst
+        case $inst in
+        y ) echo "Proceeding with install..."
+            break;;
+        n ) echo "Cannot proceed without umu-launcher, exiting...";
+            exit 1;;
+        * ) echo "Invalid response, exiting...";
+            exit 1;;
+        esac
+
+        mkdir -p $UMU_PATH
+        cd $UMU_PATH
+        wget $UMU_URL
+        tar xfvz $UMU_FILE
+        rm $UMU_FILE
     fi
 fi
 
@@ -64,4 +65,4 @@ if [ ! -f ./APBLauncher.exe ]; then
 fi
 
 # Run the launcher which will install the game if not installed
-GAMEID=113400 PROTONPATH=GE-Proton umu-run APBLauncher.exe
+GAMEID=113400 PROTONPATH=GE-Proton "$UMU_CMD" APBLauncher.exe
