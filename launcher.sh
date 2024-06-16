@@ -32,8 +32,7 @@ then
         # Install UMU
         read -p "Would you like to install umu-launcher for the current user? (y/n) " inst
         case $inst in
-        y ) echo "Proceeding with install..."
-            break;;
+        y ) echo "Proceeding with install..." ;;
         n ) echo "Cannot proceed without umu-launcher, exiting...";
             exit 1;;
         * ) echo "Invalid response, exiting...";
