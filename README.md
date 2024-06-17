@@ -10,6 +10,10 @@ Clone the repository and run launcher.sh or use this command:
 
     bash <(curl -Ls https://raw.githubusercontent.com/telqor/apb-standalone/main/launcher.sh)
 
+Alternatively, use this to install OTW:
+
+    bash <(curl -Ls https://raw.githubusercontent.com/telqor/apb-standalone/main/otw-launcher.sh)
+
 ## Acknowledgments
 Thanks to the developers of umu-launcher for making this method possible.
 
