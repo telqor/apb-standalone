@@ -18,9 +18,10 @@ GAME_PATH="$HOME/Games/APB Reloaded"
 
 APB_URL="http://apb.patch.gamersfirst.com/Launcher1.30.0.839857/Launcher"
 
-# Anti stutter config "for good measure"
+# Anti stutter config "for good measure" and free space fix
 
 export DXVK_CONFIG="d3d9.cachedDynamicBuffers = True"
+export PROTON_SET_GAME_DRIVE=1
 
 # Check for and install umu
 if ! command -v umu-run &> /dev/null
